@@ -1,10 +1,11 @@
-import Header from "./Header.jsx"
+import './App.css';
+import ExpenseItem from './components/ExpenseItem.js';
 
-function App() {
-  return (
-    <>
-      <Header />
-    </>
+const App = () => {
+  return(
+    <div className="App">
+      <ExpenseItem />
+    </div>
   )
 }
 
