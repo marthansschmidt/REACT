@@ -17,7 +17,6 @@ const App = () => {
 
   return (
     <div className="App">
-      <h1 data-debug="app-mounted" style={{color: 'white'}}>App Mounted</h1>
       {expenses.map((expense, idx) => (
         <ExpenseItem key={idx} data={expense} />
       ))}
