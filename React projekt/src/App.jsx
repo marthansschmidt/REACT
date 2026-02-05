@@ -17,8 +17,10 @@ const App = () => {
 
   return (
     <div className="App">
-      <ExpenseItem data={expenses[0]} />
-      <ExpenseItem data={expenses[1]} />
+      <h1 data-debug="app-mounted" style={{color: 'white'}}>App Mounted</h1>
+      {expenses.map((expense, idx) => (
+        <ExpenseItem key={idx} data={expense} />
+      ))}
     </div>
   );
 };
