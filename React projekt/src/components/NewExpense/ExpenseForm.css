@@ -60,6 +60,18 @@
   background-color: #004085;
 }
 
+.new-expense__btn-cancel {
+  background-color: #6c757d;
+}
+
+.new-expense__btn-cancel:hover {
+  background-color: #5a6268;
+}
+
+.new-expense__btn-cancel:active {
+  background-color: #4e555b;
+}
+
 @media (max-width: 600px) {
   .new-expense__controls {
     flex-direction: column;
