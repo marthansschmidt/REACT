@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import './Expenses.css';
-import ExpenseItem from './ExpenseItem';
+import ExpensesList from './ExpensesList';
 import ExpensesFilter from './ExpensesFilter';
 
 const Expenses = (props) => {
@@ -17,13 +17,7 @@ const Expenses = (props) => {
   return (
     <div className="expenses">
       <ExpensesFilter selectedYear={filteredYear} onFilterChange={filterChangeHandler} />
-      {filteredExpenses.length > 0 ? (
-        filteredExpenses.map((expense) => (
-          <ExpenseItem key={expense.id} data={expense} />
-        ))
-      ) : (
-        <p className="expenses__fallback">No expenses found for this year.</p>
-      )}
+      <ExpensesList items={filteredExpenses} />
     </div>
   );
 };
