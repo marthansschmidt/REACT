@@ -1,23 +1,68 @@
-import { useState } from 'react';
+import { useState, useEffect, Fragment } from 'react';
+import Error from './components/UI/Error';
 import Expenses from './components/Expenses/Expenses';
 import NewExpense from './components/NewExpense/NewExpense';
 
 const App = () => {
-  const [expenses, setExpenses] = useState([
-    { id: 'e1', title: 'New Book', price: 39.99, date: new Date(2023, 4, 23) },
-    { id: 'e2', title: 'New jeans', price: 99.99, date: new Date(2024, 3, 27) },
-    { id: 'e3', title: 'New bag', price: 79.99, date: new Date(2025, 7, 19) },
-  ]);
+  const [isFetching, setIsFetching] = useState(false);
+  const [expenses, setExpenses] = useState([]);
+  const [error, setError] = useState(null);
+  const [showError, setShowError] = useState(false);
 
-  const addExpenseHandler = (expense) => {
-    setExpenses((prevExpenses) => [expense, ...prevExpenses]);
+  useEffect(() => {
+    const getExpenses = async () => {
+      setIsFetching(true);
+      try {
+        const response = await fetch('http://localhost:3005/expenses');
+        const responseData = await response.json();
+        setExpenses(responseData.expenses);
+      } catch (error) {
+        setError({
+          title: 'An error occurred!',
+          message: 'Failed fetching expenses data, please try again later.'
+        });
+        setShowError(true);
+      }
+      setIsFetching(false);
+    };
+    getExpenses();
+  }, []);
+
+  const addExpenseHandler = async (expense) => {
+    try {
+      const response = await fetch('http://localhost:3005/add-expense', {
+        method: 'POST',
+        body: JSON.stringify(expense),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const responseData = await response.json();
+      if (!response.ok) {
+        throw new Error('Failed saving data');
+      }
+      setExpenses([expense, ...expenses]);
+    } catch (error) {
+      setError({
+        title: 'An error occurred!',
+        message: 'Failed saving expenses data, please try again later.'
+      });
+      setShowError(true);
+    }
+  };
+
+  const errorHandler = () => {
+    setShowError(false);
   };
 
   return (
-    <div className="App">
-      <NewExpense onAddExpense={addExpenseHandler} />
-      <Expenses items={expenses} />
-    </div>
+    <Fragment>
+      {showError && <Error title={error.title} message={error.message} onConfirm={errorHandler} />}
+      <div className="App">
+        <NewExpense onAddExpense={addExpenseHandler} />
+        <Expenses items={expenses} isLoading={isFetching} error={error} />
+      </div>
+    </Fragment>
   );
 };
 
